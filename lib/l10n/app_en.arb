@@ -1,0 +1,20 @@
+{
+  "@@locale": "en",
+  "language": "Language",
+  "employee": "Employee",
+  "employees": "Employees",
+  "customer": "Customer",
+  "customers": "Customers",
+  "engineer": "Engineer",
+  "engineers": "Engineers",
+  "selectLanguage": "Select Language",
+  "english": "English",
+  "greek": "Greek",
+  "appointments" : "Appointments List",
+  "myAccount" : "My Account",
+  "settings" : "Settings",
+  "logout" : "Logout",
+  "home" : "Home",
+  "mobilePhone" : "Mobile",
+  "homePhone" : "Home"
+}

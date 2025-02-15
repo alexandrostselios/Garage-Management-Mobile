@@ -1,0 +1,20 @@
+{
+  "@@locale": "el",
+  "language": "Γλώσσα",
+  "employee": "Υπάλληλος",
+  "employees": "Υπάλληλοι",
+  "customer": "Πελάτης",
+  "customers": "Πελάτες",
+  "engineer": "Μηχανικός",
+  "engineers": "Μηχανικοί",
+  "selectLanguage": "Επιλέξτε Γλώσσα",
+  "english": "Αγγλικά",
+  "greek": "Ελληνικά",
+  "appointments" : "Λίστα Ραντεβού",
+  "myAccount" : "Ο Λογαριασμός μου",
+  "settings" : "Ρυθμίσεις",
+  "logout" : "Έξοδος",
+  "home" : "Αρχική",
+  "mobilePhone" : "Κινητό",
+  "homePhone" : "Σταθερό"
+}
