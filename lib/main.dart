@@ -9,7 +9,7 @@ import 'package:garage_management/utils/config_storage.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Ensures async calls can be made
   String savedLanguage = await ConfigStorage.getLanguage();
-  String login = await ConfigStorage.getLoginStatus();
+  int login = await ConfigStorage.getLoginStatus();
   print("Main Language: $savedLanguage ==== Login Status: $login");
   runApp(
     ChangeNotifierProvider(

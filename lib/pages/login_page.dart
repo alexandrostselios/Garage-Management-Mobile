@@ -3,8 +3,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:garage_management/pages/home_page.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import '../models/carManufacter.dart';
 import '../models/userLogin.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import 'locale_provider.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -31,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
           context,
           MaterialPageRoute(
             builder: (context) => MyHomePage(
-                title: "Garage Management",
+                title: "Garage Management (Mobile)",
                 userLogin: userLogin, // Pass the userLogin object here
             ),
           ),
@@ -119,6 +124,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final localeProvider = Provider.of<LocaleProvider>(context);
+
     return Scaffold(
       resizeToAvoidBottomInset: true, // Adjust the body when the keyboard is shown
       body: SingleChildScrollView( // Make the whole body scrollable
@@ -145,9 +152,9 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text("Login", style: TextStyle(color: Colors.white, fontSize: 40, fontWeight: FontWeight.bold)),
-                    SizedBox(height: 10),
-                    Text("Welcome Back", style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                    //Text(AppLocalizations.of(context)!.login, style: TextStyle(color: Colors.white, fontSize: 40, fontWeight: FontWeight.bold)),
+                    //SizedBox(height: 10),
+                    Text(AppLocalizations.of(context)!.welcome, style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold)),
                   ],
                 ),
               ),
@@ -199,7 +206,7 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Please enter your email';
+                                      return AppLocalizations.of(context)!.enterEmail;
                                     }
                                     return null;
                                   },
@@ -217,13 +224,13 @@ class _LoginPageState extends State<LoginPage> {
                                   controller: _passwordController,
                                   obscureText: true,
                                   decoration: InputDecoration(
-                                    hintText: "Password",
+                                    hintText: AppLocalizations.of(context)!.password,
                                     hintStyle: TextStyle(color: Colors.grey),
                                     border: InputBorder.none,
                                   ),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Please enter your password';
+                                      return AppLocalizations.of(context)!.enterPassword;
                                     }
                                     return null;
                                   },
@@ -246,7 +253,7 @@ class _LoginPageState extends State<LoginPage> {
                             borderRadius: BorderRadius.circular(50), // Match container's radius
                             child: Center(
                               child: Text(
-                                "Login",
+                                AppLocalizations.of(context)!.login,
                                 style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                               ),
                             ),

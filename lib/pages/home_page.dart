@@ -10,8 +10,6 @@ import 'package:garage_management/pages/settings_page.dart';
 import 'package:garage_management/pages/login_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:http/http.dart' as http;
-import '../models/carManufacter.dart';
 import '../models/userLogin.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -40,7 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
       CustomersPage(), // Customers page
       EngineersPage(), // Engineers page
       EmployeesPage(), // Employees page
-      AppointmentsPage(), // Appointments page
+      ServiceAppointmentsPage(), // Appointments page
       MyAccountPage(), // My Account page
       SettingsPage(), // Settings page
     ];
@@ -64,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Welcome ${widget.userLogin.surname} ${widget.userLogin.name}',
+                  AppLocalizations.of(context)!.welcome + '\n${widget.userLogin.surname} ${widget.userLogin.name}',
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.normal,

@@ -38,8 +38,8 @@ class ConfigStorage {
     return config?['language'] ?? 'en'; // Default to English
   }
 
-  static Future<String> getLoginStatus() async {
+  static Future<int> getLoginStatus() async {
     Map<String, dynamic>? config = await loadConfig();
-    return config?['login'] ?? '0'; // Default to logout
+    return config?['login'] ?? 0; // Default to logout
   }
 }

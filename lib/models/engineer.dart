@@ -1,32 +1,79 @@
 class Engineer {
   final int id;
-  final String engineerSurname;
-  final String engineerName;
+  final int engineerID;
+  late final String engineerSurname;
+  late final String engineerName;
   final String engineerEmail;
   final String engineerMobilePhone;
   final String engineerHomePhone;
+  final String engineerComment;
+  final DateTime? engineerModifiedDate;
+  final String  engineerPhoto;
+  final String? engineerPassword;
+  final DateTime? lastLoginDate;
   final int enableAccess;
   final int garageID;
+  final List<String> engineerSpecialities; // Multi-value field
 
-  Engineer({required this.id, required this.engineerSurname, required this.engineerName, required this.engineerEmail, required this.engineerMobilePhone, required this.engineerHomePhone, required this.enableAccess, required this.garageID});
+  Engineer({
+    required this.id,
+    required this.engineerID,
+    required this.engineerSurname,
+    required this.engineerName,
+    required this.engineerEmail,
+    required this.engineerPassword,
+    required this.engineerMobilePhone,
+    required this.engineerHomePhone,
+    required this.engineerComment,
+    required this.enableAccess,
+    required this.lastLoginDate,
+    required this.garageID,
+    required this.engineerSpecialities, // Include in constructor
+    required this.engineerModifiedDate,
+    required this.engineerPhoto, // Add photo URL or base64 string
 
-// Factory method to create a Customer instance from a map (parsed JSON)
+  });
+
   factory Engineer.fromJson(Map<String, dynamic> json) {
     return Engineer(
-      id: json['id'] ?? 0, // Default to 0 if 'id' is null
-      engineerSurname: json['engineerSurname'] ?? '', // Default to empty string if 'engineerSurname' is null
-      engineerName: json['engineerName'] ?? '', // Default to empty string if 'engineerName' is null
-      engineerEmail: json['engineerEmail'] ?? '', // Default to empty string if 'engineerEmail' is null
-      engineerMobilePhone: json['engineerMobilePhone'] ?? '', // Default to empty string if 'engineerMobilePhone' is null
-      engineerHomePhone: json['engineerHomePhone'] ?? '', // Default to empty string if 'engineerMobilePhone' is null
-      enableAccess: json['enableAccess'] ?? 0, // Default to 0 if 'enableAccess' is null
-      garageID: json['garageID'] ?? 0, // Default to 0 if 'garageID' is null
+      id: json['id'] ?? 0,
+      engineerID: json['engineerID'] ?? 0,
+      engineerSurname: json['engineerSurname'] ?? '',
+      engineerName: json['engineerName'] ?? '',
+      engineerEmail: json['engineerEmail'] ?? '',
+      engineerMobilePhone: json['engineerMobilePhone'] ?? '',
+      engineerHomePhone: json['engineerHomePhone'] ?? '',
+      engineerComment: json['engineerComment'] ?? '',
+      enableAccess: json['enableAccess'] ?? 0,
+      engineerPassword: json['engineerPassword'] ?? '',
+      garageID: json['garageID'] ?? 0,
+      engineerPhoto: json['engineerPhoto'] ?? '', // Default to empty string if null
+      engineerModifiedDate: json['modifiedDate'] != null
+          ? DateTime.parse(json['modifiedDate']) // ✅ Convert String to DateTime
+          : null, // Default value if null
+      lastLoginDate: json['lastLoginDate'] != null
+          ? DateTime.parse(json['lastLoginDate']) // ✅ Convert String to DateTime
+          : null, // Default value if null
+      engineerSpecialities: (json['engineerSpecialities'] as List<dynamic>?)
+          ?.map((e) => e.toString())
+          .toList() ??
+          [], // Convert JSON array to List<String>
     );
   }
 
-  // To make it easier to print the model for debugging
-  @override
-  String toString() {
-    return 'Engineer{id: $id, surname: $engineerSurname, name: $engineerName, email: $engineerEmail, mobile: $engineerMobilePhone, home: $engineerHomePhone, access: $enableAccess, garageID: $garageID}';
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'engineerID': engineerID,
+      'engineerSurname': engineerSurname,
+      'engineerName': engineerName,
+      'engineerEmail': engineerEmail,
+      'engineerMobilePhone': engineerMobilePhone,
+      'engineerHomePhone': engineerHomePhone,
+      'engineerComment': engineerComment,
+      'enableAccess': enableAccess,
+      'garageID': garageID,
+      'engineerSpecialities': engineerSpecialities, // Store as a list
+    };
   }
 }
