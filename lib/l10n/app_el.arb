@@ -58,5 +58,18 @@
   "serviceAppointmentKilometer" : "Χιλιόμετρα",
   "modifiedDate" : "Ημ/νια Τροποποίησης",
   "lastLoginDate" : "Ημ/νια Εισόδου",
-  "noDataAvailable" : "Δεν Υπάρχουν Δεδομένα"
+  "noDataAvailable" : "Δεν Υπάρχουν Δεδομένα",
+  "customerCarsList" : "Λίστα Οχημάτων",
+  "licencePlate" : "Πινακίδα",
+  "kilometer" : "Χιλιόμετρα",
+  "fuelType" : "Καύσιμο",
+  "carVinNumber" : "Αρ. Πλαισίου",
+  "carManufacturer": "Κατασκευαστής",
+  "carModel": "Μοντέλο",
+  "carModelYear": "Έτος",
+  "carDetails" : "Πληροφορίες Οχήματος",
+  "addCustomerCar" : "Προσθήκη Οχήματος",
+  "add" : "Προσθήκη",
+  "carFuelType" : "Καύσιμο",
+  "carColor" : "Χρώμα"
 }

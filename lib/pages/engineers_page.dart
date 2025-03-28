@@ -6,7 +6,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:convert';  // For base64 encoding
 import 'dart:typed_data';
 
-import 'package:intl/intl.dart'; // For handling byte arrays
+import 'package:intl/intl.dart';
+
+import '../enums.dart'; // For handling byte arrays
 
 class EngineersPage extends StatefulWidget {
   const EngineersPage({super.key});
@@ -66,8 +68,7 @@ class _EngineersPageState extends State<EngineersPage> {
         if (engineer.engineerName != null) 'EngineerName': engineer.engineerName,
         if (engineer.engineerSurname != null) 'EngineerSurname': engineer.engineerSurname,
         if (engineer.engineerEmail != null) 'EngineerEmail': engineer.engineerEmail,
-        if (engineer.engineerModifiedDate != null)
-          'ModifiedDate': engineer.engineerModifiedDate?.toIso8601String(),
+        if (engineer.engineerModifiedDate != null) 'ModifiedDate': engineer.engineerModifiedDate?.toIso8601String(),
         if (engineer.engineerPhoto.isNotEmpty) 'EngineerPhoto': engineer.engineerPhoto, // Assuming base64 string
         if (engineer.engineerHomePhone != null) 'EngineerHomePhone': engineer.engineerHomePhone,
         if (engineer.engineerMobilePhone != null) 'EngineerMobilePhone': engineer.engineerMobilePhone,
@@ -89,6 +90,7 @@ class _EngineersPageState extends State<EngineersPage> {
 
       if (response.statusCode == 200) {
         print("Engineer Updated OK");
+        fetchEngineers();
         return;
       } else {
         throw Exception('Failed to update engineer specialities');
@@ -162,6 +164,81 @@ class _EngineersPageState extends State<EngineersPage> {
     );
   }
 
+  void _showEngineerDetails(BuildContext context, Engineer engineer) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return FutureBuilder<List<String>>(
+          future: fetchEngineerSpeciality(engineer.engineerID),
+          builder: (context, snapshot) {
+            List<String> specialities = snapshot.data ?? [];
+            return AlertDialog(
+              title: Text(AppLocalizations.of(context)!.engineerDetails),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildDetailRow(AppLocalizations.of(context)!.engineerID, engineer.engineerID.toString()),
+                  _buildDetailRow(AppLocalizations.of(context)!.surname, engineer.engineerSurname),
+                  _buildDetailRow(AppLocalizations.of(context)!.name, engineer.engineerName),
+                  _buildDetailRow(AppLocalizations.of(context)!.engineerComments, engineer.engineerComment),
+                  _buildDetailRow(AppLocalizations.of(context)!.enableAccess, _getAccessStatus(engineer.enableAccess)),
+                  _buildDetailRow(AppLocalizations.of(context)!.lastLoginDate, engineer.lastLoginDate != null ? DateFormat('dd-MM-yyyy HH:mm').format(engineer.lastLoginDate!) : "-"),
+                  _buildDetailRow(AppLocalizations.of(context)!.modifiedDate, engineer.engineerModifiedDate != null ? DateFormat('dd-MM-yyyy HH:mm').format(engineer.engineerModifiedDate!) : "-"),
+                  SizedBox(height: 10),
+                  Text(AppLocalizations.of(context)!.engineerSpecialities + ":", style: TextStyle(fontWeight: FontWeight.bold)),
+                  if (snapshot.connectionState == ConnectionState.waiting)
+                    Center(child: CircularProgressIndicator())
+                  else if (specialities.isNotEmpty)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: specialities.map((speciality) =>
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 2.0),
+                            child: Text("- $speciality", style: TextStyle(fontSize: 14)),
+                          ),
+                      ).toList(),
+                    )
+                  else
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: Text("-"),
+                    ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Text.rich(
+        TextSpan(
+          children: [
+            TextSpan(text: '$label: ', style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold)),
+            TextSpan(text: value, style: TextStyle(fontSize: 14)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _getAccessStatus(int access) {
+    if (access == 1) return AppLocalizations.of(context)!.enabledAccess;
+    if (access == 2) return AppLocalizations.of(context)!.restrictedAccess;
+    return AppLocalizations.of(context)!.disabledAccess;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -193,9 +270,11 @@ class _EngineersPageState extends State<EngineersPage> {
                 itemCount: engineers.length,
                 itemBuilder: (context, index) {
                   Engineer engineer = engineers[index];
-                  Color rowColor = engineer.enableAccess == 1
+                  AccessStatus accessStatus = AccessStatusExtension.fromValue(engineer.enableAccess); //Enum status of engineer EnableAccess property
+
+                  Color rowColor = accessStatus == AccessStatus.enable
                       ? Color(0xFFFAFCFE)
-                      : (engineer.enableAccess == 2
+                      : (accessStatus == AccessStatus.restricted
                       ? Color(0xFFF0BE63)
                       : Color(0xFFACA8B3));
 
@@ -285,80 +364,5 @@ class _EngineersPageState extends State<EngineersPage> {
         ),
       ),
     );
-  }
-
-  void _showEngineerDetails(BuildContext context, Engineer engineer) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return FutureBuilder<List<String>>(
-          future: fetchEngineerSpeciality(engineer.engineerID),
-          builder: (context, snapshot) {
-            List<String> specialities = snapshot.data ?? [];
-            return AlertDialog(
-              title: Text(AppLocalizations.of(context)!.engineerDetails),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildDetailRow(AppLocalizations.of(context)!.engineerID, engineer.engineerID.toString()),
-                  _buildDetailRow(AppLocalizations.of(context)!.surname, engineer.engineerSurname),
-                  _buildDetailRow(AppLocalizations.of(context)!.name, engineer.engineerName),
-                  _buildDetailRow(AppLocalizations.of(context)!.engineerComments, engineer.engineerComment),
-                  _buildDetailRow(AppLocalizations.of(context)!.enableAccess, _getAccessStatus(engineer.enableAccess)),
-                  _buildDetailRow(AppLocalizations.of(context)!.lastLoginDate, engineer.lastLoginDate != null ? DateFormat('dd-MM-yyyy HH:mm').format(engineer.lastLoginDate!) : "-"),
-                  _buildDetailRow(AppLocalizations.of(context)!.modifiedDate, engineer.engineerModifiedDate != null ? DateFormat('dd-MM-yyyy HH:mm').format(engineer.engineerModifiedDate!) : "-"),
-                  SizedBox(height: 10),
-                  Text(AppLocalizations.of(context)!.engineerSpecialities + ":", style: TextStyle(fontWeight: FontWeight.bold)),
-                  if (snapshot.connectionState == ConnectionState.waiting)
-                    Center(child: CircularProgressIndicator())
-                  else if (specialities.isNotEmpty)
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: specialities.map((speciality) =>
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 2.0),
-                            child: Text("- $speciality", style: TextStyle(fontSize: 14)),
-                          ),
-                      ).toList(),
-                    )
-                  else
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: Text("-"),
-                    ),
-                ],
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
-
-  Widget _buildDetailRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: Text.rich(
-        TextSpan(
-          children: [
-            TextSpan(text: '$label: ', style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold)),
-            TextSpan(text: value, style: TextStyle(fontSize: 14)),
-          ],
-        ),
-      ),
-    );
-  }
-
-  String _getAccessStatus(int access) {
-    if (access == 1) return AppLocalizations.of(context)!.enabledAccess;
-    if (access == 2) return AppLocalizations.of(context)!.restrictedAccess;
-    return AppLocalizations.of(context)!.disabledAccess;
   }
 }

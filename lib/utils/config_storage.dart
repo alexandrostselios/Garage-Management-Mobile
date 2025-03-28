@@ -20,7 +20,7 @@ class ConfigStorage {
     final file = await _getConfigFile();
     if (await file.exists()) {
       String content = await file.readAsString();
-      print("Content: $content");
+      //print("Content: $content");
       return jsonDecode(content);
     }
     return null;
@@ -29,7 +29,7 @@ class ConfigStorage {
   static Future<void> setLanguage(String languageCode) async {
     Map<String, dynamic> config = await loadConfig() ?? {};
     config['language'] = languageCode;
-    config['login'] = 1;
+    // config['login'] = 1;
     await saveConfig(config);
   }
 
@@ -38,8 +38,16 @@ class ConfigStorage {
     return config?['language'] ?? 'en'; // Default to English
   }
 
+  static Future<void> setLoginStatus(int status) async {
+    Map<String, dynamic> config = await loadConfig() ?? {};
+    config['login'] = status;
+    print(config['login']);
+    await saveConfig(config);
+  }
+
   static Future<int> getLoginStatus() async {
     Map<String, dynamic>? config = await loadConfig();
+    print(config?['login']);
     return config?['login'] ?? 0; // Default to logout
   }
 }

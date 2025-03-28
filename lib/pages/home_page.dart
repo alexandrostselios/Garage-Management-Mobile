@@ -11,6 +11,7 @@ import 'package:garage_management/pages/login_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../models/userLogin.dart';
+import '../utils/config_storage.dart';
 
 class MyHomePage extends StatefulWidget {
   final String title;
@@ -128,7 +129,9 @@ class _MyHomePageState extends State<MyHomePage> {
             ListTile(
               leading: const Icon(FontAwesomeIcons.lock),
               title: Text(AppLocalizations.of(context)!.logout),
-              onTap: () {
+              onTap: () async {
+                // Save selection
+                await ConfigStorage.setLoginStatus(0);
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => LoginPage()),
